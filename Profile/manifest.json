@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Profile",
+    "version": "0.0.1",
+    "displayName": "Lens Profiles",
+    "description": "Profile NFTs on the Lens Protocol.",
+    "chains": [137]
+}

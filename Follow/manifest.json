@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Follow",
+    "version": "0.0.1",
+    "displayName": "Lens Follows",
+    "description": "Follow NFTs on the Lens Protocol.",
+    "chains": [137]
+}
