@@ -1,4 +1,5 @@
 import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, On, SpecEvent, StringKeyMap } from 'https://esm.sh/@spec.dev/core@0.0.18'
+import { OnLensHub } from '../shared/events.ts'
 
 /**
  * A Lens Follow NFT.
@@ -44,18 +45,16 @@ class Follow extends LiveObject {
     //  EVENT HANDLERS
     //-----------------------------------------------------
 
-    @On('contracts.lens.LensHubProxy.FollowNFTTransferred')
+    @OnLensHub('FollowNFTTransferred')
     async onFollow(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this.profileId = data.profileId
-        this.followNftId = data.followNFTId
-        this.followerAddress = data.to
-        this.createdAt = data.blockTimestamp
-        this.blockHash = data.blockHash
-        this.blockNumber = data.blockNumber
-        this.blockTimestamp = data.blockTimestamp
-        this.chainId = data.chainId
-        await this.save()
+        this.profileId = event.data.profileId
+        this.followNftId = event.data.followNFTId
+        this.followerAddress = event.data.to
+        this.createdAt = event.data.blockTimestamp
+        this.blockHash = event.data.blockHash
+        this.blockNumber = event.data.blockNumber
+        this.blockTimestamp = event.data.blockTimestamp
+        this.chainId = event.data.chainId
     }
 }
 

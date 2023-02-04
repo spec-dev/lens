@@ -1,12 +1,10 @@
 import { LiveObject, Spec, Property, On, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.18'
-
-// LensHub contract events.
-const OnLensHub = (event: string) => On(`contracts.lens.LensHubProxy.${event}`)
+import { OnLensHub } from '../shared/events.ts'
 
 /**
  * A Lens Profile NFT.
  */
-@Spec({ 
+@Spec({
     table: 'lens.profiles',
     uniqueBy: ['profileId', 'chainId']
 })
