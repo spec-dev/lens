@@ -119,7 +119,7 @@ class Profile extends LiveObject {
 
     @OnLensHub('DefaultProfileSet')
     async switchDefaultProfiles(event: SpecEvent) {      
-        // Get owner's current default profile (to be previous if update goes through).
+        // Get existing default profile.
         const prevDefaultProfile = await this.findOne(Profile, {
             ownerAddress: event.data.wallet,
             chainId: event.data.chainId,
