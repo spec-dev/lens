@@ -1,4 +1,4 @@
-import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, On, SpecEvent, StringKeyMap } from 'https://esm.sh/@spec.dev/core@0.0.9'
+import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, On, SpecEvent, StringKeyMap } from 'https://esm.sh/@spec.dev/core@0.0.17'
 
 /**
  * A Lens Follow NFT.

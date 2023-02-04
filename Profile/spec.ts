@@ -76,7 +76,7 @@ class Profile extends LiveObject {
     //-----------------------------------------------------
 
     @BeforeOn()
-    setCommonProperties(event: SpecEvent) {
+    setCommon(event: SpecEvent) {
         this.profileId = event.data.profileId
         this.blockHash = event.data.blockHash
         this.blockNumber = event.data.blockNumber
@@ -85,8 +85,8 @@ class Profile extends LiveObject {
     }
 
     @OnLensHub('ProfileCreated')
-    async createProfile(event: SpecEvent) {
-        this.ownerAddress = event.data.to
+    createProfile(event: SpecEvent) {
+        this.ownerAddress = event.data.tos
         this.creatorAddress = event.data.creator
         this.handle = event.data.handle
         this.imageUri = event.data.imageURI
@@ -94,32 +94,27 @@ class Profile extends LiveObject {
         this.followModuleReturnData = event.data.followModuleReturnData
         this.followNftUri = event.data.followNFTURI
         this.createdAt = event.data.blockTimestamp
-        await this.save()
     }
 
     @OnLensHub('DispatcherSet')
-    async updateDispatcher(event: SpecEvent) {
+    updateDispatcher(event: SpecEvent) {
         this.dispatcherAddress = event.data.dispatcher
-        await this.save()
     }
 
     @OnLensHub('ProfileImageURISet')
-    async updateImageUri(event: SpecEvent) {
+    updateImageUri(event: SpecEvent) {
         this.imageUri = event.data.imageURI
-        await this.save()
     }
 
     @OnLensHub('FollowModuleSet')
     async updateFollowModule(event: SpecEvent) {
         this.followModuleAddress = event.data.followModule
         this.followModuleReturnData = event.data.followModuleReturnData
-        await this.save()
     }
 
     @OnLensHub('FollowNFTURISet')
     async updateFollowNftUri(event: SpecEvent) {
         this.followNftUri = event.data.followNFTURI
-        await this.save()
     }
 
     @OnLensHub('DefaultProfileSet')
