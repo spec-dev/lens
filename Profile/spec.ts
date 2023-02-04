@@ -86,7 +86,7 @@ class Profile extends LiveObject {
 
     @OnLensHub('ProfileCreated')
     createProfile(event: SpecEvent) {
-        this.ownerAddress = event.data.tos
+        this.ownerAddress = event.data.to
         this.creatorAddress = event.data.creator
         this.handle = event.data.handle
         this.imageUri = event.data.imageURI
