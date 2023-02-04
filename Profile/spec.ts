@@ -107,13 +107,13 @@ class Profile extends LiveObject {
     }
 
     @OnLensHub('FollowModuleSet')
-    async updateFollowModule(event: SpecEvent) {
+    updateFollowModule(event: SpecEvent) {
         this.followModuleAddress = event.data.followModule
         this.followModuleReturnData = event.data.followModuleReturnData
     }
 
     @OnLensHub('FollowNFTURISet')
-    async updateFollowNftUri(event: SpecEvent) {
+    updateFollowNftUri(event: SpecEvent) {
         this.followNftUri = event.data.followNFTURI
     }
 
