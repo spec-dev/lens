@@ -46,7 +46,7 @@ class Follow extends LiveObject {
     //-----------------------------------------------------
 
     @OnLensHub('FollowNFTTransferred')
-    async onFollow(event: SpecEvent) {
+    onFollow(event: SpecEvent) {
         this.profileId = event.data.profileId
         this.followNftId = event.data.followNFTId
         this.followerAddress = event.data.to
