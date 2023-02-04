@@ -10,6 +10,8 @@ npm-debug.log*
 typings/
 *.tsbuildinfo
 .npm
+index.ts
+bin/
 
 # Runtime data
 pids

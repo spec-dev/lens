@@ -1,4 +1,7 @@
-import { LiveObject, Spec, Property, On, BeforeOn, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.9'
+import { LiveObject, Spec, Property, On, BeforeOn, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.17'
+
+// LensHub contract events.
+const OnLensHub = (event: string) => On(`contracts.lens.LensHubProxy.${event}`)
 
 /**
  * A Lens Profile NFT.
@@ -81,7 +84,7 @@ class Profile extends LiveObject {
         this.chainId = event.data.chainId
     }
 
-    @On('contracts.lens.LensHubProxy.ProfileCreated')
+    @OnLensHub('ProfileCreated')
     async createProfile(event: SpecEvent) {
         this.ownerAddress = event.data.to
         this.creatorAddress = event.data.creator
@@ -94,32 +97,32 @@ class Profile extends LiveObject {
         await this.save()
     }
 
-    @On('contracts.lens.LensHubProxy.DispatcherSet')
+    @OnLensHub('DispatcherSet')
     async updateDispatcher(event: SpecEvent) {
         this.dispatcherAddress = event.data.dispatcher
         await this.save()
     }
 
-    @On('contracts.lens.LensHubProxy.ProfileImageURISet')
+    @OnLensHub('ProfileImageURISet')
     async updateImageUri(event: SpecEvent) {
         this.imageUri = event.data.imageURI
         await this.save()
     }
 
-    @On('contracts.lens.LensHubProxy.FollowModuleSet')
+    @OnLensHub('FollowModuleSet')
     async updateFollowModule(event: SpecEvent) {
         this.followModuleAddress = event.data.followModule
         this.followModuleReturnData = event.data.followModuleReturnData
         await this.save()
     }
 
-    @On('contracts.lens.LensHubProxy.FollowNFTURISet')
+    @OnLensHub('FollowNFTURISet')
     async updateFollowNftUri(event: SpecEvent) {
         this.followNftUri = event.data.followNFTURI
         await this.save()
     }
 
-    @On('contracts.lens.LensHubProxy.DefaultProfileSet')
+    @OnLensHub('DefaultProfileSet')
     async switchDefaultProfiles(event: SpecEvent) {      
         this.isDefault = true
 
