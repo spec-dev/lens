@@ -1,11 +1,11 @@
-import { LiveObject, Spec, Property, On, BlockHash, Address, BlockNumber, Timestamp, StringKeyMap, ChainId, SpecEvent } from 'https://esm.sh/@spec.dev/core@0.0.9'
+import { LiveObject, Spec, Property, On, BeforeOn, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.9'
 
 /**
  * A Lens Profile NFT.
  */
 @Spec({ 
     table: 'lens.profiles',
-    uniqueBy: [['profileId', 'chainId'], ['handle', 'chainId']]
+    uniqueBy: ['profileId', 'chainId']
 })
 class Profile extends LiveObject {
     // The profile's token id (referred to as "profileId" on Lens).
@@ -39,10 +39,6 @@ class Profile extends LiveObject {
     // The data returned from the follow module's initialization.
     @Property()
     followModuleReturnData: string
-
-    // The address of the profile's follow NFT.
-    @Property()
-    followNftAddress: Address
     
     // The URI of the profile's follow NFT
     @Property()
@@ -76,103 +72,76 @@ class Profile extends LiveObject {
     //  EVENT HANDLERS
     //-----------------------------------------------------
 
+    @BeforeOn()
+    setCommonProperties(event: SpecEvent) {
+        this.profileId = event.data.profileId
+        this.blockHash = event.data.blockHash
+        this.blockNumber = event.data.blockNumber
+        this.blockTimestamp = event.data.blockTimestamp
+        this.chainId = event.data.chainId
+    }
+
     @On('contracts.lens.LensHubProxy.ProfileCreated')
     async createProfile(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this.profileId = data.profileId
-        this.ownerAddress = data.to
-        this.creatorAddress = data.creator
-        this.handle = data.handle
-        this.imageUri = data.imageURI
-        this.followModuleAddress = data.followModule
-        this.followModuleReturnData = data.followModuleReturnData
-        this.followNftAddress = null // Get from contract
-        this.followNftUri = data.followNFTURI
-        this.createdAt = data.blockTimestamp
-        this._setBlockProperties(data)
+        this.ownerAddress = event.data.to
+        this.creatorAddress = event.data.creator
+        this.handle = event.data.handle
+        this.imageUri = event.data.imageURI
+        this.followModuleAddress = event.data.followModule
+        this.followModuleReturnData = event.data.followModuleReturnData
+        this.followNftUri = event.data.followNFTURI
+        this.createdAt = event.data.blockTimestamp
         await this.save()
     }
 
     @On('contracts.lens.LensHubProxy.DispatcherSet')
     async updateDispatcher(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        this.dispatcherAddress = data.dispatcher
+        this.dispatcherAddress = event.data.dispatcher
         await this.save()
     }
 
     @On('contracts.lens.LensHubProxy.ProfileImageURISet')
     async updateImageUri(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        this.imageUri = data.imageURI
+        this.imageUri = event.data.imageURI
         await this.save()
     }
 
     @On('contracts.lens.LensHubProxy.FollowModuleSet')
     async updateFollowModule(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        this.followModuleAddress = data.followModule
-        this.followModuleReturnData = data.followModuleReturnData
-        await this.save()
-    }
-    
-    @On('contracts.lens.LensHubProxy.FollowNFTDeployed')
-    async updateFollowNftAddress(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        this.followNftAddress = data.followNFT
+        this.followModuleAddress = event.data.followModule
+        this.followModuleReturnData = event.data.followModuleReturnData
         await this.save()
     }
 
     @On('contracts.lens.LensHubProxy.FollowNFTURISet')
     async updateFollowNftUri(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        this.followNftUri = data.followNFTURI
+        this.followNftUri = event.data.followNFTURI
         await this.save()
     }
 
     @On('contracts.lens.LensHubProxy.DefaultProfileSet')
-    async switchDefaultProfiles(event: SpecEvent) {
-        const data = event.data as StringKeyMap
-        this._setEventAgnosticProperties(data)
-        
-        // Get owner's current default profile.
-        const existingDefaultProfile = await this.findOneBy({
-            ownerAddress: data.wallet,
-            chainId: data.chainId,
+    async switchDefaultProfiles(event: SpecEvent) {      
+        this.isDefault = true
+
+        // Get owner's previous default profile.
+        const prevDefaultProfile = await this.findOne(Profile, {
+            ownerAddress: event.data.wallet,
+            chainId: event.data.chainId,
             isDefault: true,
         })
-
-        // Set new default profile.
-        this.isDefault = true
-        const updates = [this.save()]
-
-        // Tell previous default profile it's not the default anymore.
-        if (existingDefaultProfile) {
-            existingDefaultProfile.isDefault = false
-            updates.push(existingDefaultProfile.save())
+        if (prevDefaultProfile.profileId === this.profileId) {
+            return
         }
 
-        await Promise.all(updates)
-    }
+        // Just save the new default profile if it's the only one.
+        if (!prevDefaultProfile) {
+            await this.save()
+            return
+        }
 
-    //-----------------------------------------------------
-    //  HELPERS
-    //-----------------------------------------------------
-
-    _setEventAgnosticProperties(data: StringKeyMap) {
-        this.profileId = data.profileId
-        this._setBlockProperties(data)
-    }
-
-    _setBlockProperties(data: StringKeyMap) {
-        this.blockHash = data.blockHash
-        this.blockNumber = data.blockNumber
-        this.blockTimestamp = data.blockTimestamp
-        this.chainId = data.chainId
+        // Save both in parallel.
+        prevDefaultProfile.isDefault = false
+        await saveAll(this, prevDefaultProfile)
     }
 }
 
