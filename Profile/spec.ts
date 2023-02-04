@@ -126,10 +126,14 @@ class Profile extends LiveObject {
             isDefault: true,
         })
         if (prevDefaultProfile?.profileId === this.profileId) return
+
         this.isDefault = true
 
-        // Just save the new default profile if it's the only one.
-        if (!prevDefaultProfile) return this.save()
+        // Just save the new default profile if one didn't already exist.
+        if (!prevDefaultProfile) {
+            await this.save()
+            return
+        }
 
         // Save both in parallel.
         prevDefaultProfile.isDefault = false
