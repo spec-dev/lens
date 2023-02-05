@@ -1,4 +1,4 @@
-import { LiveObject, Spec, Property, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.18'
+import { LiveObject, Spec, Property, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.19'
 import { OnLensHub } from '../shared/events.ts'
 
 /**
@@ -74,7 +74,7 @@ class Profile extends LiveObject {
     //-----------------------------------------------------
 
     @OnAll()
-    setCommon(event: SpecEvent) {
+    setCommonProperties(event: SpecEvent) {
         this.profileId = event.data.profileId
         this.blockHash = event.data.blockHash
         this.blockNumber = event.data.blockNumber
