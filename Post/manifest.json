@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Post",
+    "version": "0.0.1",
+    "displayName": "Lens Posts",
+    "description": "Posts on the Lens Protocol.",
+    "chains": [137]
+}
