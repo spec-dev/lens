@@ -21,9 +21,9 @@ class Collect extends LiveObject {
     @Property()
     collectNftId: number
 
-    // The address of the collecter.
+    // The address of the collector.
     @Property()
-    collecterAddress: Address
+    collectorAddress: Address
     
     // The block timestamp in which the collect NFT was created.
     @Property({ update: false })
@@ -54,7 +54,7 @@ class Collect extends LiveObject {
         this.profileId = event.data.profileId
         this.pubId = event.data.pubId
         this.collectNftId = event.data.collectNFTId
-        this.collecterAddress = event.data.to
+        this.collectorAddress = event.data.to
         this.createdAt = event.data.blockTimestamp
         this.blockHash = event.data.blockHash
         this.blockNumber = event.data.blockNumber

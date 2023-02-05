@@ -10,6 +10,7 @@ npm-debug.log*
 typings/
 *.tsbuildinfo
 .npm
+*.sql
 index.ts
 bin/
 
