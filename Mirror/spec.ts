@@ -2,42 +2,30 @@ import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp,
 import { OnLensHub } from '../shared/events.ts'
 
 /**
- * A Comment on Lens.
+ * A Mirror on Lens.
  */
 @Spec({
-    table: 'lens.comments',
+    table: 'lens.mirrors',
     uniqueBy: ['profileId', 'pubId', 'chainId']
 })
-class Comment extends LiveObject {
-    // The profile token id that posted the comment.
+class Mirror extends LiveObject {
+    // The profile token id of the profile that created the mirror.
     @Property()
     profileId: number
     
-    // The id of the comment.
+    // The id of the mirror.
     @Property()
     pubId: number
 
-    // The profile token id that this comment points to.
+    // The token id of the profile this mirror points to.
     @Property()
     toProfileId: number
 
-    // The publication id that this comment points to.
+    // The id of the publication being mirrored.
     @Property()
     toPubId: number
 
-    // URI pointing to the specific content the comment contains.
-    @Property()
-    contentUri: string
-
-    // The address of the comment's collect module.
-    @Property()
-    collectModule: Address
-
-    // The data returned from the collect module's initialization.
-    @Property()
-    collectModuleReturnData: string
-
-    // The address of the comment's reference module.
+    // The address of the mirror's reference module.
     @Property()
     referenceModule: Address
 
@@ -49,15 +37,15 @@ class Comment extends LiveObject {
     @Property()
     referenceModuleReturnData: string
     
-    // The block hash in which the comment was created.
+    // The block hash in which the mirror was created.
     @Property()
     blockHash: BlockHash
 
-    // The block number in which the comment was created.
+    // The block number in which the mirror was created.
     @Property()
     blockNumber: BlockNumber
 
-    // The block timestamp in which the comment was created.
+    // The block timestamp in which the mirror was created.
     @Property({ primaryTimestamp: true })
     blockTimestamp: Timestamp
 
@@ -69,15 +57,12 @@ class Comment extends LiveObject {
     //  EVENT HANDLERS
     //-----------------------------------------------------
 
-    @OnLensHub('CommentCreated')
-    createComment(event: SpecEvent) {
+    @OnLensHub('MirrorCreated')
+    createMirror(event: SpecEvent) {
         this.profileId = event.data.profileId
         this.pubId = event.data.pubId
         this.toProfileId = event.data.profileIdPointed
         this.toPubId = event.data.pubIdPointed
-        this.contentUri = event.data.contentURI
-        this.collectModule = event.data.collectModule
-        this.collectModuleReturnData = event.data.collectModuleReturnData
         this.referenceModule = event.data.referenceModule
         this.referenceModuleData = event.data.referenceModuleData
         this.referenceModuleReturnData = event.data.referenceModuleReturnData
@@ -88,4 +73,4 @@ class Comment extends LiveObject {
     }
 }
 
-export default Comment
+export default Mirror

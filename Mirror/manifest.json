@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Mirror",
+    "version": "0.0.1",
+    "displayName": "Lens Mirrors",
+    "description": "Mirrors on the Lens Protocol.",
+    "chains": [137]
+}
