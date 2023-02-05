@@ -9,7 +9,7 @@ import { OnLensHub } from '../shared/events.ts'
     uniqueBy: ['profileId', 'pubId', 'chainId']
 })
 class Mirror extends LiveObject {
-    // The profile token id of the profile that created the mirror.
+    // The token id of the profile that created the mirror.
     @Property()
     profileId: number
     
