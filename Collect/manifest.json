@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Collect",
+    "version": "0.0.1",
+    "displayName": "Lens Collect NFTs",
+    "description": "Collect NFTs on the Lens Protocol.",
+    "chains": [137]
+}
