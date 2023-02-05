@@ -9,7 +9,7 @@ import { OnLensHub } from '../shared/events.ts'
     uniqueBy: ['profileId', 'followNftId', 'chainId']
 })
 class Follow extends LiveObject {
-    // The token id of the followed profile NFT.
+    // The token id of the profile followed.
     @Property()
     profileId: number
     

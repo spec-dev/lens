@@ -41,7 +41,7 @@ class Profile extends LiveObject {
     @Property()
     followModuleReturnData: string
     
-    // The URI of the profile's follow NFT
+    // The URI of the profile's follow NFT.
     @Property()
     followNftUri: string
 
@@ -49,7 +49,7 @@ class Profile extends LiveObject {
     @Property()
     isDefault: boolean
 
-    // The block timestamp in which the profile NFT was created.
+    // The block timestamp in which the profile was created.
     @Property()
     createdAt: Timestamp
 

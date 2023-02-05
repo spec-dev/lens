@@ -1,0 +1,8 @@
+{
+    "namespace": "lens",
+    "name": "Comment",
+    "version": "0.0.1",
+    "displayName": "Lens Comments",
+    "description": "Comments on the Lens Protocol.",
+    "chains": [137]
+}

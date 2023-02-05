@@ -2,26 +2,34 @@ import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp,
 import { OnLensHub } from '../shared/events.ts'
 
 /**
- * A Post on Lens.
+ * A Comment on Lens.
  */
 @Spec({
-    table: 'lens.posts',
+    table: 'lens.comments',
     uniqueBy: ['profileId', 'pubId', 'chainId']
 })
-class Post extends LiveObject {
-    // The token id of the profile that made the post.
+class Comment extends LiveObject {
+    // The token id of the profile that made the comment (the commentor).
     @Property()
     profileId: number
     
-    // The id of the post.
+    // The id of the comment.
     @Property()
     pubId: number
 
-    // URI pointing to the specific content the publication contains.
+    // The token id of the profile this comment points to.
+    @Property()
+    toProfileId: number
+
+    // The id of the publication this comment points to.
+    @Property()
+    toPubId: number
+
+    // URI pointing to the specific content the comment contains.
     @Property()
     contentUri: string
 
-    // The address of the post's collect module.
+    // The address of the comment's collect module.
     @Property()
     collectModule: Address
 
@@ -29,23 +37,27 @@ class Post extends LiveObject {
     @Property()
     collectModuleReturnData: string
 
-    // The address of the post's reference module.
+    // The address of the comment's reference module.
     @Property()
     referenceModule: Address
+
+    // The data passed to the reference module.
+    @Property()
+    referenceModuleData: string
 
     // The data returned from the reference module's initialization.
     @Property()
     referenceModuleReturnData: string
     
-    // The block hash in which the post was created.
+    // The block hash in which the comment was created.
     @Property()
     blockHash: BlockHash
 
-    // The block number in which the post was created.
+    // The block number in which the comment was created.
     @Property()
     blockNumber: BlockNumber
 
-    // The block timestamp in which the post was created.
+    // The block timestamp in which the comment was created.
     @Property({ primaryTimestamp: true })
     blockTimestamp: Timestamp
 
@@ -57,14 +69,17 @@ class Post extends LiveObject {
     //  EVENT HANDLERS
     //-----------------------------------------------------
 
-    @OnLensHub('PostCreated')
-    createPost(event: SpecEvent) {
+    @OnLensHub('CommentCreated')
+    createComment(event: SpecEvent) {
         this.profileId = event.data.profileId
         this.pubId = event.data.pubId
+        this.toProfileId = event.data.profileIdPointed
+        this.toPubId = event.data.pubIdPointed
         this.contentUri = event.data.contentURI
         this.collectModule = event.data.collectModule
         this.collectModuleReturnData = event.data.collectModuleReturnData
         this.referenceModule = event.data.referenceModule
+        this.referenceModuleData = event.data.referenceModuleData
         this.referenceModuleReturnData = event.data.referenceModuleReturnData
         this.blockHash = event.data.blockHash
         this.blockNumber = event.data.blockNumber
@@ -73,4 +88,4 @@ class Post extends LiveObject {
     }
 }
 
-export default Post
+export default Comment
