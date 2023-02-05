@@ -9,14 +9,14 @@ import { OnLensHub } from '../shared/events.ts'
     uniqueBy: ['pubId', 'profileId', 'chainId']
 })
 class Post extends LiveObject {
-    // The id of the post.
-    @Property()
-    pubId: number
-    
-    // The token id of the profile NFT in which this post was published.
+    // The token id of the profile that made the post.
     @Property()
     profileId: number
     
+    // The id of the post.
+    @Property()
+    pubId: number
+
     // URI pointing to the specific content the publication contains.
     @Property()
     contentUri: string
