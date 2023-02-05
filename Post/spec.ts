@@ -6,17 +6,17 @@ import { OnLensHub } from '../shared/events.ts'
  */
 @Spec({
     table: 'lens.posts',
-    uniqueBy: ['profileId', 'pubId', 'chainId']
+    uniqueBy: ['pubId', 'profileId', 'chainId']
 })
 class Post extends LiveObject {
+    // The id of the post.
+    @Property()
+    pubId: number
+    
     // The token id of the profile NFT in which this post was published.
     @Property()
     profileId: number
     
-    // The id of the post.
-    @Property()
-    pubId: number
-
     // URI pointing to the specific content the publication contains.
     @Property()
     contentUri: string
