@@ -1,10 +1,11 @@
-import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent } from 'https://esm.sh/@spec.dev/core@0.0.20'
+import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent } from 'https://esm.sh/@spec.dev/core@0.0.27'
 import { OnLensHub } from '../shared/events.ts'
 
 /**
  * A Comment on Lens.
  */
 @Spec({
+    namespace: 'lens',
     table: 'lens.comments',
     uniqueBy: ['profileId', 'pubId', 'chainId']
 })
