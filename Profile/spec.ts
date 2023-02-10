@@ -1,4 +1,4 @@
-import { LiveObject, Spec, Property, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.19'
+import { LiveObject, Spec, Property, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.20'
 import { OnLensHub } from '../shared/events.ts'
 
 /**
@@ -116,7 +116,7 @@ class Profile extends LiveObject {
     }
 
     @OnLensHub('DefaultProfileSet')
-    async switchDefaultProfiles(event: SpecEvent) {      
+    async switchDefaultProfiles(event: SpecEvent) {
         // Get existing default profile.
         const prevDefaultProfile = await this.findOne(Profile, {
             ownerAddress: event.data.wallet,

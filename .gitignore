@@ -13,6 +13,7 @@ typings/
 *.sql
 index.ts
 bin/
+*.sh
 
 # Runtime data
 pids
