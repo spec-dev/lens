@@ -11,7 +11,7 @@ import { OnLensHub } from '../shared/events.ts'
     uniqueBy: ['profileId', 'chainId']
 })
 class Profile extends LiveObject {
-    // The profile's token id (referred to as "profileId" on Lens).
+    // The profile's token id.
     @Property()
     profileId: number
     
