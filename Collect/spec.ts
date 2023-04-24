@@ -1,12 +1,9 @@
-import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent } from 'https://esm.sh/@spec.dev/core@0.0.28'
-import { OnLensHub } from '../shared/events.ts'
+import { LiveObject, Spec, Property, Address, Timestamp, OnEvent, Event } from '@spec.dev/core'
 
 /**
  * A Lens Collect NFT.
  */
 @Spec({
-    namespace: 'lens',
-    name: 'Collect',
     table: 'lens.collects',
     uniqueBy: ['profileId', 'pubId', 'collectNftId', 'chainId']
 })
@@ -28,40 +25,18 @@ class Collect extends LiveObject {
     collectorAddress: Address
     
     // The block timestamp in which the collect NFT was created.
-    @Property({ update: false })
+    @Property({ canUpdate: false })
     createdAt: Timestamp
 
-    // The block hash in which the collect NFT was last updated.
-    @Property()
-    blockHash: BlockHash
+    // ==== Event Handlers ===================
 
-    // The block number in which the collect NFT was last updated.
-    @Property()
-    blockNumber: BlockNumber
-
-    // The block timestamp in which the collect NFT was last updated.
-    @Property({ primaryTimestamp: true })
-    blockTimestamp: Timestamp
-
-    // The blockchain id.
-    @Property()
-    chainId: ChainId
-
-    //-----------------------------------------------------
-    //  EVENT HANDLERS
-    //-----------------------------------------------------
-
-    @OnLensHub('CollectNFTTransferred')
-    onCollect(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.CollectNFTTransferred')
+    onCollect(event: Event) {
         this.profileId = event.data.profileId
         this.pubId = event.data.pubId
         this.collectNftId = event.data.collectNFTId
         this.collectorAddress = event.data.to
         this.createdAt = event.data.blockTimestamp
-        this.blockHash = event.data.blockHash
-        this.blockNumber = event.data.blockNumber
-        this.blockTimestamp = event.data.blockTimestamp
-        this.chainId = event.data.chainId
     }
 }
 

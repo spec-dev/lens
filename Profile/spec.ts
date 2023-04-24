@@ -1,12 +1,9 @@
-import { LiveObject, Spec, Property, OnAll, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent, saveAll } from 'https://esm.sh/@spec.dev/core@0.0.28'
-import { OnLensHub } from '../shared/events.ts'
+import { LiveObject, Spec, Property, OnAllEvents, OnEvent, Event, Address, Timestamp, saveAll } from '@spec.dev/core'
 
 /**
  * A Lens Profile NFT.
  */
 @Spec({
-    namespace: 'lens',
-    name: 'Profile',
     table: 'lens.profiles',
     uniqueBy: ['profileId', 'chainId']
 })
@@ -52,40 +49,20 @@ class Profile extends LiveObject {
     isDefault: boolean
 
     // The block timestamp in which the profile was created.
-    @Property()
+    @Property({ canUpdate: false })
     createdAt: Timestamp
-
-    // The block hash in which the profile was last updated.
-    @Property()
-    blockHash: BlockHash
-
-    // The block number in which the profile was last updated.
-    @Property()
-    blockNumber: BlockNumber
-
-    // The block timestamp in which the profile was last updated.
-    @Property({ primaryTimestamp: true })
-    blockTimestamp: Timestamp
-
-    // The blockchain id.
-    @Property()
-    chainId: ChainId
 
     //-----------------------------------------------------
     //  EVENT HANDLERS
     //-----------------------------------------------------
 
-    @OnAll()
-    setCommonProperties(event: SpecEvent) {
+    @OnAllEvents()
+    setCommonProperties(event: Event) {
         this.profileId = event.data.profileId
-        this.blockHash = event.data.blockHash
-        this.blockNumber = event.data.blockNumber
-        this.blockTimestamp = event.data.blockTimestamp
-        this.chainId = event.data.chainId
     }
 
-    @OnLensHub('ProfileCreated')
-    createProfile(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.ProfileCreated')
+    createProfile(event: Event) {
         this.ownerAddress = event.data.to
         this.creatorAddress = event.data.creator
         this.handle = event.data.handle
@@ -96,29 +73,29 @@ class Profile extends LiveObject {
         this.createdAt = event.data.blockTimestamp
     }
 
-    @OnLensHub('DispatcherSet')
-    updateDispatcher(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.DispatcherSet')
+    updateDispatcher(event: Event) {
         this.dispatcherAddress = event.data.dispatcher
     }
 
-    @OnLensHub('ProfileImageURISet')
-    updateImageUri(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.ProfileImageURISet')
+    updateImageUri(event: Event) {
         this.imageUri = event.data.imageURI
     }
 
-    @OnLensHub('FollowModuleSet')
-    updateFollowModule(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.FollowModuleSet')
+    updateFollowModule(event: Event) {
         this.followModuleAddress = event.data.followModule
         this.followModuleReturnData = event.data.followModuleReturnData
     }
 
-    @OnLensHub('FollowNFTURISet')
-    updateFollowNftUri(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.FollowNFTURISet')
+    updateFollowNftUri(event: Event) {
         this.followNftUri = event.data.followNFTURI
     }
 
-    @OnLensHub('DefaultProfileSet')
-    async switchDefaultProfiles(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.DefaultProfileSet')
+    async switchDefaultProfiles(event: Event) {
         // Get existing default profile.
         const prevDefaultProfile = await this.findOne(Profile, {
             ownerAddress: event.data.wallet,

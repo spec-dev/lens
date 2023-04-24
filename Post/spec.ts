@@ -1,14 +1,11 @@
-import { LiveObject, Spec, Property, BlockHash, Address, BlockNumber, Timestamp, ChainId, SpecEvent } from 'https://esm.sh/@spec.dev/core@0.0.28'
-import { OnLensHub } from '../shared/events.ts'
+import { LiveObject, Spec, Property, Address, OnEvent, Event } from '@spec.dev/core'
 
 /**
  * A Post on Lens.
  */
-@Spec({
-    namespace: 'lens',
-    name: 'Post',
+@Spec({ 
     table: 'lens.posts',
-    uniqueBy: ['profileId', 'pubId', 'chainId']
+    uniqueBy: ['profileId', 'pubId', 'chainId'] 
 })
 class Post extends LiveObject {
     // The token id of the profile that made the post.
@@ -39,28 +36,10 @@ class Post extends LiveObject {
     @Property()
     referenceModuleReturnData: string
     
-    // The block hash in which the post was created.
-    @Property()
-    blockHash: BlockHash
+    // ==== Event Handlers ===================
 
-    // The block number in which the post was created.
-    @Property()
-    blockNumber: BlockNumber
-
-    // The block timestamp in which the post was created.
-    @Property({ primaryTimestamp: true })
-    blockTimestamp: Timestamp
-
-    // The blockchain id.
-    @Property()
-    chainId: ChainId
-
-    //-----------------------------------------------------
-    //  EVENT HANDLERS
-    //-----------------------------------------------------
-
-    @OnLensHub('PostCreated')
-    createPost(event: SpecEvent) {
+    @OnEvent('lens.LensHubProxy.PostCreated')
+    createPost(event: Event) {
         this.profileId = event.data.profileId
         this.pubId = event.data.pubId
         this.contentUri = event.data.contentURI
@@ -68,10 +47,6 @@ class Post extends LiveObject {
         this.collectModuleReturnData = event.data.collectModuleReturnData
         this.referenceModule = event.data.referenceModule
         this.referenceModuleReturnData = event.data.referenceModuleReturnData
-        this.blockHash = event.data.blockHash
-        this.blockNumber = event.data.blockNumber
-        this.blockTimestamp = event.data.blockTimestamp
-        this.chainId = event.data.chainId
     }
 }
 
